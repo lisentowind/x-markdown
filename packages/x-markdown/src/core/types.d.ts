@@ -23,11 +23,13 @@ export type Attributes = Record<string, string>;
 interface TTableProps {
   /** whether it is in head */
   isHead: boolean;
+  [key: string]: unknown;
 }
 
 interface THeadingProps {
   /** heading level */
   level: number;
+  [key: string]: unknown;
 }
 
 interface TListProps {
@@ -35,6 +37,7 @@ interface TListProps {
   depth: number;
   /** whether it is ordered list */
   ordered: boolean;
+  [key: string]: unknown;
 }
 
 interface TCodeProps {
@@ -49,6 +52,7 @@ interface TCodeProps {
 
   /** whether it is inline code */
   inline: boolean;
+  [key: string]: unknown;
 }
 
 // https://www.google.com/search?q=record%3Cstring,+any%3E+vs+record%3Cstring,+unknown%3E&sourceid=chrome&ie=UTF-8

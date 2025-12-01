@@ -1,7 +1,9 @@
 <script lang="ts">
 import { defineComponent, h, toValue } from 'vue';
 import { useMarkdownContext } from '../MarkdownProvider';
+// @ts-ignore
 import CodeBlock from '../CodeBlock/index.vue';
+// @ts-ignore
 import CodeLine from '../CodeLine/index.vue';
 import Mermaid from '../Mermaid/index.vue';
 export default defineComponent({
@@ -23,7 +25,7 @@ export default defineComponent({
           }
           return h(renderer, props);
         }
-        return h(CodeLine, { raw: props.raw });
+        return h(CodeLine, props);
       }
       const { language } = props.raw;
       if (codeXRender && codeXRender[language]) {
@@ -36,7 +38,6 @@ export default defineComponent({
       if (language === 'mermaid') {
         return h(Mermaid, props);
       }
-
       return h(CodeBlock, props);
     };
   }

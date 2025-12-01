@@ -3,7 +3,7 @@ import type { Options as TRehypeOptions } from 'mdast-util-to-hast';
 import type { PluggableList } from 'unified';
 import type { PropType } from 'vue';
 
-import type { CustomAttrs, SanitizeOptions, TVueMarkdown } from '../types';
+import type { CustomAttrs, SanitizeOptions, TVueMarkdown } from './types';
 import { defineComponent, shallowRef, toRefs, watch } from 'vue';
 // import { useMarkdownContext } from '../components/MarkdownProvider';
 import { render } from './hast-to-vnode';

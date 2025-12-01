@@ -1,11 +1,11 @@
 import { defineComponent, h } from 'vue';
 import {
   MarkdownProvider,
-  useMarkdownContext
+  useMarkdownContext,
+  MARKDOWN_CORE_PROPS
 } from '../components/MarkdownProvider';
 import { VueMarkdown, VueMarkdownAsync } from '../core';
 import { useComponents } from '../hooks';
-import { MARKDOWN_CORE_PROPS } from '../shared';
 
 const InnerRenderer = defineComponent({
   name: 'InnerMarkdownRenderer',

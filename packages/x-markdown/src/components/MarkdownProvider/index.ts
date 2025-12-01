@@ -1,14 +1,42 @@
-import type { Ref } from 'vue';
-
-import type { MarkdownContext } from '../../types';
+import type { PropType, Ref } from 'vue';
+import type { PluggableList } from 'unified';
+import type { MarkdownContext } from './types';
+import type { CodeXProps } from '../CodeX/types';
+import type { MermaidToolbarConfig } from '../Mermaid/types';
+import type { CustomAttrs, SanitizeOptions } from '../../core/types';
 import deepmerge from 'deepmerge';
-
 import { computed, defineComponent, h, inject, provide, toValue } from 'vue';
-import {
-  usePlugins,
-  useProcessMarkdown
-} from '../../hooks';
-import { MARKDOWN_PROVIDER_KEY, MARKDOWN_CORE_PROPS } from '../../shared';
+import { usePlugins, useProcessMarkdown } from '../../hooks';
+
+// Provider 注入的 key
+const MARKDOWN_PROVIDER_KEY = Symbol('vue-element-plus-x-markdown-provider');
+
+// Markdown 核心 Props 定义
+const MARKDOWN_CORE_PROPS = {
+  markdown: { type: String, default: '' },
+  allowHtml: { type: Boolean, default: false },
+  enableLatex: { type: Boolean, default: true },
+  enableAnimate: { type: Boolean, default: false },
+  enableBreaks: { type: Boolean, default: true },
+  codeXProps: {
+    type: Object as PropType<CodeXProps>,
+    default: () => ({ enableCodeCopy: true, enableThemeToggle: false, enableCodeLineNumber: false })
+  },
+  codeXRender: { type: Object, default: () => ({}) },
+  codeXSlot: { type: Object, default: () => ({}) },
+  codeHighlightTheme: { type: Object as PropType<any | null>, default: () => null },
+  customAttrs: { type: Object as PropType<CustomAttrs>, default: () => ({}) },
+  remarkPlugins: { type: Array as PropType<PluggableList>, default: () => [] },
+  remarkPluginsAhead: { type: Array as PropType<PluggableList>, default: () => [] },
+  rehypePlugins: { type: Array as PropType<PluggableList>, default: () => [] },
+  rehypePluginsAhead: { type: Array as PropType<PluggableList>, default: () => [] },
+  rehypeOptions: { type: Object as PropType<Record<string, any>>, default: () => ({}) },
+  sanitize: { type: Boolean, default: false },
+  sanitizeOptions: { type: Object as PropType<SanitizeOptions>, default: () => ({}) },
+  mermaidConfig: { type: Object as PropType<Partial<MermaidToolbarConfig>>, default: () => ({}) },
+  defaultThemeMode: { type: String as PropType<'light' | 'dark'>, default: 'light' },
+  isDark: { type: Boolean, default: false }
+};
 
 
 const MarkdownProvider = defineComponent({
@@ -64,4 +92,5 @@ function useMarkdownContext(): Ref<MarkdownContext> {
   }
   return context;
 }
-export { MarkdownProvider, useMarkdownContext };
+
+export { MarkdownProvider, useMarkdownContext, MARKDOWN_CORE_PROPS };

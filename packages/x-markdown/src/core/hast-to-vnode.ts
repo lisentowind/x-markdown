@@ -6,7 +6,7 @@ import type {
   Context,
   CustomAttrs,
   CustomAttrsObjectResult
-} from '../types';
+} from './types';
 import { find, html, svg } from 'property-information';
 import { h, toValue } from 'vue';
 
