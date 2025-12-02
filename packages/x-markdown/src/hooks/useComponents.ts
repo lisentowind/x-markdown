@@ -10,7 +10,7 @@ interface UseComponentsOptions {
   codeXSlots?: Record<string, any>;
   // 是否为深色模式
   isDark?: boolean;
-  // 代码块配置（包含 lightTheme、darkTheme）
+  // 代码块配置
   codeXProps?: CodeXProps;
 }
 
@@ -27,8 +27,12 @@ function useComponents(props?: UseComponentsOptions) {
       codeXRender: props?.codeXRender,
       codeXSlots: props?.codeXSlots,
       isDark: props?.isDark,
+      // 主题配置
       codeLightTheme: props?.codeXProps?.codeLightTheme,
-      codeDarkTheme: props?.codeXProps?.codeDarkTheme
+      codeDarkTheme: props?.codeXProps?.codeDarkTheme,
+      // 功能配置
+      showCodeBlockHeader: props?.codeXProps?.showCodeBlockHeader,
+      codeMaxHeight: props?.codeXProps?.codeMaxHeight
     })
   };
   return components;

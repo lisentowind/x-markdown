@@ -1,5 +1,5 @@
 <template>
-  <code class="inline-code-tag">
+  <code class="x-md-inline-code">
     {{ content }}
   </code>
 </template>
