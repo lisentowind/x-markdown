@@ -1,3 +1,5 @@
+import type { BuiltinTheme } from 'shiki'
+
 /**
  * CodeBlock 组件的 Props 类型定义
  * 用于代码块的展示和高亮
@@ -7,6 +9,14 @@ export interface CodeBlockProps {
    * 原始数据对象，包含代码块的完整信息
    */
   raw?: CodeBlockRaw;
+  /**
+   * 是否为深色模式
+   */
+  isDark?: boolean;
+  /**
+   * Shiki 主题
+   */
+  theme?: BuiltinTheme;
 }
 
 /**

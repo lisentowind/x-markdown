@@ -1,4 +1,6 @@
 export * from './useComponents';
+export * from './useHighlight';
 export * from './useMarkdown';
 export * from './useMermaid';
 export * from './usePlugins';
+export * from './useTheme';

@@ -279,11 +279,6 @@ const toggleTheme = () => {
   background: white;
 }
 
-.preview-content.dark-mode {
-  background: #1e1e1e;
-  color: #d4d4d4;
-}
-
 @media (max-width: 1024px) {
   .container {
     grid-template-columns: 1fr;

@@ -1,5 +1,5 @@
 <template>
-  <div class="code-block-wrapper" :class="className" :style="containerStyle">
+  <div class="code-block-wrapper" :class="[className, { 'is-dark': props.isDark }]" :style="containerStyle">
     <!-- 头部：支持插槽自定义 -->
     <div v-if="showHeader" class="code-header">
       <slot name="header" :language="language" :code="code" :copy="copy" :copied="copied">
@@ -20,7 +20,7 @@
       </slot>
     </div>
     <pre v-if="showFallback"><code>{{ code }}</code></pre>
-    <pre v-else :class="['shiki', theme]" :style="preStyle" tabindex="0">
+    <pre v-else :class="['shiki', props.theme]" :style="preStyle" tabindex="0">
       <code class="code-content">
         <span v-for="(line, i) in lines" :key="i" class="line">
           <template v-if="!line.length">{{ '\u00A0' }}</template>
@@ -37,13 +37,13 @@ import { getTokenStyleObject } from '@shikijs/core'
 import { useClipboard } from '@vueuse/core'
 import { useHighlight } from '../../hooks/useHighlight'
 
-// 复制功能
 const { copy, copied } = useClipboard({ copiedDuring: 2000 })
 
 interface Props {
   code: string
   language: string
   theme?: BuiltinTheme
+  isDark?: boolean
   colorReplacements?: Record<string, string>
   className?: string
   style?: CSSProperties
@@ -54,15 +54,17 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   theme: 'vitesse-light',
+  isDark: false,
   className: 'stream-highlighter',
   showHeader: true
 })
 
-// 代码高亮
 const code = computed(() => props.code.trim())
+const actualTheme = computed(() => props.theme)
+
 const { lines, preStyle } = useHighlight(code, {
   language: props.language,
-  theme: props.theme,
+  theme: actualTheme,
   streaming: true,
   colorReplacements: props.colorReplacements
 })
@@ -121,13 +123,25 @@ const containerStyle = computed(() => ({
   background: rgba(0, 0, 0, 0.03);
 }
 
+/* 暗色主题容器 */
+.code-block-wrapper.is-dark {
+  background: rgba(255, 255, 255, 0.13);
+}
+
 /* 头部样式 */
 .code-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 8px 16px;
-  background: rgba(0, 0, 0, 0.015);
+  background: rgba(0, 0, 0, 0.05);
+  color: #333;
+}
+
+/* 暗色主题头部 */
+.code-block-wrapper.is-dark .code-header {
+  background: rgba(0, 0, 0, 0.25);
+  color: #fff;
 }
 
 .header-left,
@@ -152,15 +166,28 @@ const containerStyle = computed(() => ({
   padding: 4px 8px;
   border: none;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.08);
   color: inherit;
   font-size: 12px;
   font-family: inherit;
   cursor: pointer;
-  opacity: 0.6;
+  opacity: 0.7;
   transition: all 0.2s ease;
 }
 
+.copy-btn:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.12);
+}
+
+/* 暗色主题复制按钮 */
+.code-block-wrapper.is-dark .copy-btn {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.code-block-wrapper.is-dark .copy-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
 
 .copy-btn.copied {
   opacity: 1;

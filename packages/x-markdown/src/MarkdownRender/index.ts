@@ -2,6 +2,7 @@ import type { PropType } from 'vue';
 import type { PluggableList } from 'unified';
 import type { CodeXProps } from '../components/CodeX/types';
 import type { CustomAttrs, SanitizeOptions } from '../core/types';
+import type { BuiltinTheme } from 'shiki';
 import deepmerge from 'deepmerge';
 import { computed, defineComponent, h, toValue } from 'vue';
 import { VueMarkdown, VueMarkdownAsync } from '../core';
@@ -19,6 +20,10 @@ const markdownRendererProps = {
   enableAnimate: { type: Boolean, default: false },
   // 是否启用换行符转 <br>
   enableBreaks: { type: Boolean, default: true },
+  // 是否为深色模式
+  isDark: { type: Boolean, default: false },
+  // Shiki 主题
+  theme: { type: String as PropType<BuiltinTheme>, default: 'vitesse-light' },
   // 代码块 CodeX 组件 props
   codeXProps: {
     type: Object as PropType<CodeXProps>,
@@ -95,7 +100,15 @@ const MarkdownRenderer = defineComponent({
     return () =>
       h(
         'div',
-        { class: 'elx-xmarkdown-renderer', ...attrs },
+        {
+          class: ['elx-xmarkdown-renderer', { 'is-dark': props.isDark }],
+          style: {
+            backgroundColor: props.isDark ? '#1e1e1e' : '#ffffff',
+            color: props.isDark ? '#e5e5e5' : '#333333',
+            padding: '16px'
+          },
+          ...attrs
+        },
         h(VueMarkdown, renderProps.value as any, {
           ...components,
           ...slots
@@ -153,7 +166,15 @@ const MarkdownRendererAsync = defineComponent({
     return () =>
       h(
         'div',
-        { class: 'elx-xmarkdown-renderer', ...attrs },
+        {
+          class: ['elx-xmarkdown-renderer', { 'is-dark': props.isDark }],
+          style: {
+            backgroundColor: props.isDark ? '#1e1e1e' : '#ffffff',
+            color: props.isDark ? '#e5e5e5' : '#333333',
+            padding: '16px'
+          },
+          ...attrs
+        },
         h(VueMarkdownAsync, renderProps.value as any, {
           ...components,
           ...slots
