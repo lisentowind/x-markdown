@@ -57,7 +57,7 @@ const props = withDefaults(defineProps<Props>(), {
   theme: 'vitesse-light',
   isDark: false,
   className: 'stream-highlighter',
-  showHeader: true
+  showHeader: true,
 })
 
 const code = computed(() => props.code.trim())
@@ -67,7 +67,7 @@ const { lines, preStyle } = useHighlight(code, {
   language: props.language,
   theme: actualTheme,
   streaming: true,
-  colorReplacements: props.colorReplacements
+  colorReplacements: props.colorReplacements,
 })
 
 // 颜色替换
@@ -82,7 +82,7 @@ const normalizeStyleKeys = (style: Record<string, string | number>): CSSProperti
   Object.entries(style).forEach(([key, value]) => {
     // font-style -> fontStyle
     const camelKey = key.replace(/-([a-z])/g, (_, char) => char.toUpperCase())
-      ; (normalized as Record<string, string | number>)[camelKey] = value
+    ;(normalized as Record<string, string | number>)[camelKey] = value
   })
   return normalized
 }
@@ -112,7 +112,7 @@ const showFallback = computed(() => !lines.value?.length)
 const containerStyle = computed(() => ({
   ...props.style,
   maxWidth: props.maxWidth,
-  maxHeight: props.maxHeight
+  maxHeight: props.maxHeight,
 }))
 </script>
 

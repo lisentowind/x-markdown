@@ -204,20 +204,8 @@ function handleTabClickEvent(pane: TabClickEvent) {
     <!-- 左侧 Tabs -->
     <div class="toolbar-left" :style="tabTextColorStyle">
       <div class="toolbar-tabs">
-        <div
-          class="tab-item"
-          :class="{ active: activeTab === 'diagram' }"
-          @click="handleTabClick('diagram')"
-        >
-          图片
-        </div>
-        <div
-          class="tab-item"
-          :class="{ active: activeTab === 'code' }"
-          @click="handleTabClick('code')"
-        >
-          代码
-        </div>
+        <div class="tab-item" :class="{ active: activeTab === 'diagram' }" @click="handleTabClick('diagram')">图片</div>
+        <div class="tab-item" :class="{ active: activeTab === 'code' }" @click="handleTabClick('code')">代码</div>
       </div>
     </div>
 
@@ -273,13 +261,7 @@ function handleTabClickEvent(pane: TabClickEvent) {
           :style="iconColorStyle"
           @click="handleZoomOut($event)"
         >
-          <svg
-            width="16"
-            height="16"
-            data-v-c91486b5=""
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 1024 1024"
-          >
+          <svg width="16" height="16" data-v-c91486b5="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
             <path
               fill="currentColor"
               d="m795.904 750.72 124.992 124.928a32 32 0 0 1-45.248 45.248L750.656 795.904a416 416 0 1 1 45.248-45.248zM480 832a352 352 0 1 0 0-704 352 352 0 0 0 0 704M352 448h256a32 32 0 0 1 0 64H352a32 32 0 0 1 0-64"
@@ -288,19 +270,8 @@ function handleTabClickEvent(pane: TabClickEvent) {
         </div>
 
         <!-- 放大按钮 -->
-        <div
-          v-if="config.showZoomIn"
-          class="toolbar-action-btn"
-          :style="iconColorStyle"
-          @click="handleZoomIn($event)"
-        >
-          <svg
-            width="16"
-            height="16"
-            data-v-c91486b5=""
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 1024 1024"
-          >
+        <div v-if="config.showZoomIn" class="toolbar-action-btn" :style="iconColorStyle" @click="handleZoomIn($event)">
+          <svg width="16" height="16" data-v-c91486b5="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
             <path
               fill="currentColor"
               d="m795.904 750.72 124.992 124.928a32 32 0 0 1-45.248 45.248L750.656 795.904a416 416 0 1 1 45.248-45.248zM480 832a352 352 0 1 0 0-704 352 352 0 0 0 0 704m-32-384v-96a32 32 0 0 1 64 0v96h96a32 32 0 0 1 0 64h-96v96a32 32 0 0 1-64 0v-96h-96a32 32 0 0 1 0-64z"
@@ -309,19 +280,8 @@ function handleTabClickEvent(pane: TabClickEvent) {
         </div>
 
         <!-- 适应按钮 (重置) -->
-        <div
-          v-if="config.showReset"
-          class="toolbar-action-btn"
-          :style="iconColorStyle"
-          @click="handleReset($event)"
-        >
-          <svg
-            width="16"
-            height="16"
-            data-v-c91486b5=""
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 1024 1024"
-          >
+        <div v-if="config.showReset" class="toolbar-action-btn" :style="iconColorStyle" @click="handleReset($event)">
+          <svg width="16" height="16" data-v-c91486b5="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
             <path
               fill="currentColor"
               d="M512 896a384 384 0 1 0 0-768 384 384 0 0 0 0 768m0 64a448 448 0 1 1 0-896 448 448 0 0 1 0 896"

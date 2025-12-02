@@ -1,9 +1,5 @@
 <script setup lang="ts">
-import type {
-  MdComponent,
-  MermaidExposeProps,
-  MermaidToolbarConfig,
-} from './types'
+import type { MdComponent, MermaidExposeProps, MermaidToolbarConfig } from './types'
 import { debounce } from 'lodash-es'
 import { computed, nextTick, ref, toValue, watch } from 'vue'
 import { useMermaid, useMermaidZoom } from '../../hooks'
@@ -26,9 +22,7 @@ const mermaidResult = useMermaid(mermaidContent, {
 })
 
 const svg = ref('')
-const isLoading = computed(
-  () => !mermaidResult.data.value && !mermaidResult.error.value
-)
+const isLoading = computed(() => !mermaidResult.data.value && !mermaidResult.error.value)
 
 // 移除不存在的 context 相关代码
 // 使用空对象代替 codeXSlot
@@ -68,7 +62,7 @@ watch(
       svg.value = newSvg
       debouncedInitialize()
     }
-  }
+  },
 )
 watch(svg, (newSvg) => {
   if (newSvg) {
@@ -162,11 +156,7 @@ const exposedMethods = computed(() => {
     <Transition name="toolbar" appear>
       <div class="toolbar-container">
         <!-- 自定义完整头部插槽 -->
-        <component
-          :is="codeXSlot.codeMermaidHeader"
-          v-if="codeXSlot?.codeMermaidHeader"
-          v-bind="exposedMethods"
-        />
+        <component :is="codeXSlot.codeMermaidHeader" v-if="codeXSlot?.codeMermaidHeader" v-bind="exposedMethods" />
         <!-- 默认工具栏 + 自定义操作插槽 -->
         <template v-else>
           <!-- 自定义操作按钮插槽 -->
@@ -192,14 +182,8 @@ const exposedMethods = computed(() => {
         </template>
       </div>
     </Transition>
-    <Transition
-      name="content"
-      mode="out-in"
-      @after-enter="onContentTransitionEnter"
-    >
-      <pre v-if="showSourceCode" key="source" class="mermaid-source-code">{{
-        props.raw.content
-      }}</pre>
+    <Transition name="content" mode="out-in" @after-enter="onContentTransitionEnter">
+      <pre v-if="showSourceCode" key="source" class="mermaid-source-code">{{ props.raw.content }}</pre>
       <div v-else class="mermaid-content" v-html="svg" />
     </Transition>
   </div>
