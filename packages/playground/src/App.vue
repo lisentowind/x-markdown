@@ -117,6 +117,9 @@
             <template #self-btn>
               <button>点击button</button>
             </template>
+             <template #tip>
+              <div class="tip">角标</div>
+            </template>
             <!-- 自定义链接：添加外链图标 -->
             <template v-if="useCustomSlots" #a="{ node, children }">
               <a :href="node?.properties?.href" target="_blank" rel="noopener noreferrer" class="custom-link">
@@ -165,6 +168,8 @@ let streamIndex = 0
 const fullContent = `# 🎉 X-Markdown 功能演示
 
 欢迎使用 X-Markdown Playground！这是一个功能丰富的 Vue 3 Markdown 组件库。
+
+<tip>角标</tip>
 
 ## ✨ 核心特性
 
@@ -262,7 +267,6 @@ graph LR
 
 ## 🔤 插槽示例
 <self-btn>这是button</self-btn>
-
 ## 🔗 相关链接
 
 - [Vue.js 官网](https://vuejs.org)
@@ -892,5 +896,31 @@ body {
   .preview-panel {
     min-height: 500px;
   }
+}
+.tip{
+  display: inline-block;
+  background: #fffae5;
+  color: #b45309;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid #fcd34d;
+  margin-top: 20px;
+  position: relative;
+}
+.tip::after {
+  content: '6';
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+  background: #ef4444;
+  color: white;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  text-align: center;
+  font-size: 12px;
 }
 </style>
