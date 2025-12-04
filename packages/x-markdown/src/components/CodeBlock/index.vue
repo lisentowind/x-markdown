@@ -87,9 +87,9 @@
         <code class="x-md-code-content">
           <span v-for="(line, i) in lines" :key="i" class="x-md-code-line">
             <!-- 空行显示占位符 -->
-            <template v-if="!line.length">{{ '\u00A0' }}</template>
+            <span v-if="!line.length">&nbsp;</span>
             <!-- 渲染 token - 当 enableAnimate 为 true 时添加动画 class -->
-            <span 
+            <span  
               v-else 
               v-for="(token, j) in line" 
               :key="j" 

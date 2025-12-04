@@ -211,7 +211,7 @@ const exposedMethods = computed(
       <div v-if="showSourceCode" key="source" class="mermaid-source-code">
         <pre :class="['shiki', actualTheme]" :style="preStyle"><code class="code-content">
         <span v-for="(line, i) in lines" :key="i" class="code-line">
-          <template v-if="!line.length">{{ '\u00A0' }}</template>
+          <span v-if="!line.length">&nbsp;</span>
           <template v-else><span
                 v-for="(token, j) in line"
                 :key="j"
