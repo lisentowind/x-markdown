@@ -88,7 +88,7 @@ let mermaidPromise: Promise<any> | null = null
 async function loadMermaid() {
   if (typeof window === 'undefined') return null
   if (!mermaidPromise) {
-    mermaidPromise = import('mermaid').then(m => m.default)
+    mermaidPromise = import('mermaid').then((m) => m.default)
   }
   return mermaidPromise
 }
@@ -122,7 +122,7 @@ function addToRenderQueue(task: RenderTask) {
 }
 
 export function useMermaid(content: string | Ref<string>, options: UseMermaidOptionsInput = {}): UseMermaidResult {
-  const optionsRef = computed(() => typeof options === 'object' && 'value' in options ? options.value : options)
+  const optionsRef = computed(() => (typeof options === 'object' && 'value' in options ? options.value : options))
   const mermaidConfig = computed(() => ({
     suppressErrorRendering: true,
     startOnLoad: false,
@@ -137,9 +137,7 @@ export function useMermaid(content: string | Ref<string>, options: UseMermaidOpt
   const getRenderContainer = () => {
     const containerOption = optionsRef.value.container
     if (containerOption) {
-      return typeof containerOption === 'object' && 'value' in containerOption
-        ? containerOption.value
-        : containerOption
+      return typeof containerOption === 'object' && 'value' in containerOption ? containerOption.value : containerOption
     }
     return null
   }
@@ -206,10 +204,7 @@ export function useMermaid(content: string | Ref<string>, options: UseMermaidOpt
   )
 
   watch(
-    [
-      () => (typeof content === 'string' ? content : content.value),
-      () => mermaidConfig.value,
-    ],
+    [() => (typeof content === 'string' ? content : content.value), () => mermaidConfig.value],
     () => {
       throttledRender()
     },
@@ -250,6 +245,7 @@ export function useMermaidZoom(options: UseMermaidZoomOptions): MermaidZoomContr
   const addInteractionEvents = (containerEl: HTMLElement) => {
     let startX = 0
     let startY = 0
+    let isInteractingWithMermaid = false
 
     const onStart = (clientX: number, clientY: number) => {
       isDragging.value = true
@@ -259,7 +255,7 @@ export function useMermaidZoom(options: UseMermaidZoomOptions): MermaidZoomContr
     }
 
     const onMove = (clientX: number, clientY: number) => {
-      if (isDragging.value) {
+      if (isDragging.value && isInteractingWithMermaid) {
         posX.value = clientX - startX
         posY.value = clientY - startY
         const svg = getSvg()
@@ -271,15 +267,25 @@ export function useMermaidZoom(options: UseMermaidZoomOptions): MermaidZoomContr
 
     const onEnd = () => {
       isDragging.value = false
+      isInteractingWithMermaid = false
       document.body.style.userSelect = ''
     }
 
     const onMouseDown = (e: MouseEvent) => {
       if (e.button !== 0) return
-      e.preventDefault()
-      onStart(e.clientX, e.clientY)
+      // 只在点击Mermaid容器时才阻止默认行为
+      if (e.target === containerEl || containerEl.contains(e.target as Node)) {
+        e.preventDefault()
+        isInteractingWithMermaid = true
+        onStart(e.clientX, e.clientY)
+      }
     }
-    const onMouseMove = (e: MouseEvent) => onMove(e.clientX, e.clientY)
+
+    const onMouseMove = (e: MouseEvent) => {
+      if (isInteractingWithMermaid) {
+        onMove(e.clientX, e.clientY)
+      }
+    }
 
     const handleWheelZoom = (e: WheelEvent) => {
       const svg = getSvg()
@@ -291,8 +297,8 @@ export function useMermaidZoom(options: UseMermaidZoomOptions): MermaidZoomContr
       const mouseX = e.clientX - containerRect.left
       const mouseY = e.clientY - containerRect.top
 
-      const svgCenterX = (svgRect.left - containerRect.left) + svgRect.width / 2
-      const svgCenterY = (svgRect.top - containerRect.top) + svgRect.height / 2
+      const svgCenterX = svgRect.left - containerRect.left + svgRect.width / 2
+      const svgCenterY = svgRect.top - containerRect.top + svgRect.height / 2
 
       const offsetX = (mouseX - svgCenterX - posX.value) / scale.value
       const offsetY = (mouseY - svgCenterY - posY.value) / scale.value
@@ -313,17 +319,27 @@ export function useMermaidZoom(options: UseMermaidZoomOptions): MermaidZoomContr
     const throttledWheelZoom = throttle(handleWheelZoom, 20, { leading: true, trailing: true })
 
     const onWheel = (e: WheelEvent) => {
-      e.preventDefault()
-      throttledWheelZoom(e)
+      // 只在鼠标在Mermaid容器内时才阻止滚动
+      if (e.target === containerEl || containerEl.contains(e.target as Node)) {
+        e.preventDefault()
+        throttledWheelZoom(e)
+      }
     }
 
     const onTouchStart = (e: TouchEvent) => {
-      if (e.touches.length === 1) {
-        onStart(e.touches[0].clientX, e.touches[0].clientY)
+      // 只在触摸Mermaid容器时才处理
+      if (e.target === containerEl || containerEl.contains(e.target as Node)) {
+        if (e.touches.length === 1) {
+          e.preventDefault()
+          isInteractingWithMermaid = true
+          onStart(e.touches[0].clientX, e.touches[0].clientY)
+        }
       }
     }
+
     const onTouchMove = (e: TouchEvent) => {
-      if (e.touches.length === 1) {
+      // 只在触摸Mermaid容器时才处理
+      if (isInteractingWithMermaid) {
         e.preventDefault()
         onMove(e.touches[0].clientX, e.touches[0].clientY)
       }
@@ -334,7 +350,8 @@ export function useMermaidZoom(options: UseMermaidZoomOptions): MermaidZoomContr
     document.addEventListener('mouseup', onEnd)
     containerEl.addEventListener('wheel', onWheel, { passive: false })
     containerEl.addEventListener('touchstart', onTouchStart, { passive: false })
-    document.addEventListener('touchmove', onTouchMove, { passive: false })
+    // 只在Mermaid容器上监听touchmove，而不是document
+    containerEl.addEventListener('touchmove', onTouchMove, { passive: false })
     document.addEventListener('touchend', onEnd)
 
     return () => {
@@ -343,7 +360,7 @@ export function useMermaidZoom(options: UseMermaidZoomOptions): MermaidZoomContr
       document.removeEventListener('mouseup', onEnd)
       containerEl.removeEventListener('wheel', onWheel)
       containerEl.removeEventListener('touchstart', onTouchStart)
-      document.removeEventListener('touchmove', onTouchMove)
+      containerEl.removeEventListener('touchmove', onTouchMove)
       document.removeEventListener('touchend', onEnd)
       document.body.style.userSelect = ''
     }
