@@ -21,6 +21,7 @@ const markdownRendererProps = {
     default: () => ['vitesse-light', 'vitesse-dark'] as [BuiltinTheme, BuiltinTheme],
   },
   showCodeBlockHeader: { type: Boolean, default: true },
+  stickyCodeBlockHeader: { type: Boolean, default: false },
   codeMaxHeight: { type: String, default: undefined },
   codeBlockActions: { type: Array as PropType<CodeBlockAction[]>, default: undefined },
   mermaidActions: { type: Array as PropType<MermaidAction[]>, default: undefined },

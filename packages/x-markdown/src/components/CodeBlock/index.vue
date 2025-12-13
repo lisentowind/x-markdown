@@ -1,87 +1,94 @@
 <template>
   <div class="x-md-code-block" :class="{ 'x-md-code-block--dark': props.isDark }">
-    <div v-if="showCodeBlockHeader" class="x-md-code-header">
-      <slot
-        name="codeHeader"
-        :language="language"
-        :code="code"
-        :copy="copy"
-        :copied="copied"
-        :collapsed="collapsed"
-        :toggleCollapse="toggleCollapse"
-      >
-        <div class="x-md-code-header__left">
-          <button
-            class="x-md-collapse-btn"
-            :class="{ 'x-md-collapse-btn--collapsed': collapsed }"
-            @click="toggleCollapse"
-            :title="collapsed ? '展开代码' : '折叠代码'"
-          >
-            <svg
-              class="x-md-collapse-icon"
-              viewBox="0 0 24 24"
-              width="14"
-              height="14"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-          </button>
-          <span class="x-md-code-lang">{{ language }}</span>
-        </div>
-        <div class="x-md-code-header__right">
-          <slot name="codeActions" :code="code" :copy="copy" :copied="copied">
+    <!-- 头部区域：支持完全自定义或默认渲染 -->
+    <div
+      v-if="showCodeBlockHeader"
+      class="x-md-code-header-wrapper"
+      :class="[{'x-md-code-header-wrapper--sticky': props.stickyCodeBlockHeader }, { 'x-md-code-header-wrapper--collapsed': collapsed }]"
+    >
+      <div class="x-md-code-header">
+        <slot
+          name="codeHeader"
+          :language="language"
+          :code="code"
+          :copy="copy"
+          :copied="copied"
+          :collapsed="collapsed"
+          :toggleCollapse="toggleCollapse"
+        >
+          <div class="x-md-code-header__left">
             <button
-              v-for="action in filteredActions"
-              :key="action.key"
-              class="x-md-action-btn"
-              :class="[action.class, { 'x-md-action-btn--disabled': action.disabled }]"
-              :style="action.style"
-              :title="action.title"
-              :disabled="action.disabled"
-              @click="handleActionClick(action)"
+              class="x-md-collapse-btn"
+              :class="{ 'x-md-collapse-btn--collapsed': collapsed }"
+              @click="toggleCollapse"
+              :title="collapsed ? '展开代码' : '折叠代码'"
             >
-              <component :is="renderActionIcon(action)" v-if="action.icon" />
-            </button>
-            <button class="x-md-copy-btn" :class="{ 'x-md-copy-btn--copied': copied }" @click="copy(code)">
               <svg
-                v-if="copied"
-                class="x-md-copy-icon"
-                width="16"
-                height="16"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 1024 1024"
+                class="x-md-collapse-icon"
+                viewBox="0 0 24 24"
+                width="14"
+                height="14"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
               >
-                <path
-                  fill="currentColor"
-                  d="M406.656 706.944 195.84 496.256a32 32 0 1 0-45.248 45.248l256 256 512-512a32 32 0 0 0-45.248-45.248L406.592 706.944z"
-                />
-              </svg>
-              <svg
-                v-else
-                class="x-md-copy-icon"
-                width="16"
-                height="16"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 1024 1024"
-              >
-                <path
-                  fill="currentColor"
-                  d="M768 832a128 128 0 0 1-128 128H192A128 128 0 0 1 64 832V384a128 128 0 0 1 128-128v64a64 64 0 0 0-64 64v448a64 64 0 0 0 64 64h448a64 64 0 0 0 64-64z"
-                />
-                <path
-                  fill="currentColor"
-                  d="M384 128a64 64 0 0 0-64 64v448a64 64 0 0 0 64 64h448a64 64 0 0 0 64-64V192a64 64 0 0 0-64-64zm0-64h448a128 128 0 0 1 128 128v448a128 128 0 0 1-128 128H384a128 128 0 0 1-128-128V192A128 128 0 0 1 384 64"
-                />
+                <polyline points="6 9 12 15 18 9"></polyline>
               </svg>
             </button>
-          </slot>
-        </div>
-      </slot>
+            <span class="x-md-code-lang">{{ language }}</span>
+          </div>
+          <div class="x-md-code-header__right">
+            <slot name="codeActions" :code="code" :copy="copy" :copied="copied">
+              <button
+                v-for="action in filteredActions"
+                :key="action.key"
+                class="x-md-action-btn"
+                :class="[action.class, { 'x-md-action-btn--disabled': action.disabled }]"
+                :style="action.style"
+                :title="action.title"
+                :disabled="action.disabled"
+                @click="handleActionClick(action)"
+              >
+                <component :is="renderActionIcon(action)" v-if="action.icon" />
+              </button>
+                <button class="x-md-copy-btn" :class="{ 'x-md-copy-btn--copied': copied }" @click="copy(code)">
+                  <svg
+                    v-if="copied"
+                    class="x-md-copy-icon"
+                    width="16"
+                    height="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 1024 1024"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M406.656 706.944 195.84 496.256a32 32 0 1 0-45.248 45.248l256 256 512-512a32 32 0 0 0-45.248-45.248L406.592 706.944z"
+                    />
+                  </svg>
+                  <svg
+                    v-else
+                    class="x-md-copy-icon"
+                    width="16"
+                    height="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 1024 1024"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M768 832a128 128 0 0 1-128 128H192A128 128 0 0 1 64 832V384a128 128 0 0 1 128-128v64a64 64 0 0 0-64 64v448a64 64 0 0 0 64 64h448a64 64 0 0 0 64-64z"
+                    />
+                    <path
+                      fill="currentColor"
+                      d="M384 128a64 64 0 0 0-64 64v448a64 64 0 0 0 64 64h448a64 64 0 0 0 64-64V192a64 64 0 0 0-64-64zm0-64h448a128 128 0 0 1 128 128v448a128 128 0 0 1-128 128H384a128 128 0 0 1-128-128V192A128 128 0 0 1 384 64"
+                    />
+                  </svg>
+                </button>
+              </slot>
+          </div>
+        </slot>
+      </div>
     </div>
     <div class="x-md-code-body" :class="{ 'x-md-code-body--collapsed': collapsed }">
       <SyntaxCodeBlock
@@ -120,12 +127,13 @@ const toggleCollapse = () => {
 }
 
 const props = withDefaults(defineProps<CodeBlockProps>(), {
-  lightTheme: 'vitesse-light',
-  darkTheme: 'vitesse-dark',
-  isDark: false,
-  showCodeBlockHeader: true,
-  enableAnimate: false,
-  codeBlockActions: undefined,
+  lightTheme: 'vitesse-light', // 默认亮色主题
+  darkTheme: 'vitesse-dark',   // 默认暗色主题
+  isDark: false,               // 默认亮色模式
+  showCodeBlockHeader: true,   // 默认显示代码块头部
+  enableAnimate: false,        // 默认不启用动画
+  codeBlockActions: undefined, // 默认无自定义操作按钮
+  stickyCodeBlockHeader: true, // 默认启用sticky
 })
 
 const code = computed(() => props.code.trim())
@@ -202,6 +210,18 @@ defineExpose({
   background: rgba(255, 255, 255, 0.13);
 }
 
+/* ==================== 头部工具栏样式 ==================== */
+.x-md-code-header-wrapper--sticky {
+  background: #fff;                  /* 白色背景用于覆盖代码块背景 */
+  position: sticky;
+  top: 0;
+}
+
+/* 暗色主题 Sticky 头部包裹器 */
+.x-md-code-block.x-md-code-block--dark .x-md-code-header-wrapper--sticky {
+  background: #1a1a1a;
+}
+
 .x-md-code-header {
   display: flex;
   justify-content: space-between;
@@ -211,9 +231,31 @@ defineExpose({
   color: #333;
 }
 
+/* Sticky 头部样式 */
+.x-md-code-block .x-md-code-header-wrapper--sticky .x-md-code-header{
+  background: rgba(235, 235, 235);
+  border-radius: 8px 8px 0 0;
+}
+
+/* 当启用 sticky header 时，移除 overflow hidden */
+.x-md-code-block:has(.x-md-code-header-wrapper--sticky) {
+  overflow: visible;
+}
+
+/* 暗色主题头部 */
 .x-md-code-block.x-md-code-block--dark .x-md-code-header {
   background: rgba(0, 0, 0, 0.25);
   color: #fff;
+}
+
+/* 暗色主题Sticky头部 */
+.x-md-code-block.x-md-code-block--dark .x-md-code-header-wrapper--sticky .x-md-code-header {
+  background: rgba(44, 44, 44);
+}
+
+/* 折叠收起补齐圆角 */
+.x-md-code-block .x-md-code-header-wrapper--collapsed .x-md-code-header {
+    border-radius: 8px;
 }
 
 .x-md-code-header__left,
